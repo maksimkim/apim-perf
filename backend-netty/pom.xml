@@ -30,6 +30,12 @@
 			<version>4.1.13.Final </version>
 			<classifier>osx-x86_64</classifier>
 		</dependency>
+        
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-tcnative-boringssl-static</artifactId>
+            <version>2.0.0.Final</version>
+        </dependency>        
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
