@@ -59,7 +59,7 @@ public class HelloWebServer {
 
 			Channel ch = b.bind(inet).sync().channel();
 
-			System.out.printf("Httpd started. Listening on: %s%n", inet.toString());
+			System.out.printf("Netty backend started. Listening on: %s%n", inet.toString());
 
 			ch.closeFuture().sync();
 		} finally {

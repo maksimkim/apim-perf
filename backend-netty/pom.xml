@@ -3,8 +3,8 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.techempower</groupId>
-	<artifactId>netty-example</artifactId>
+	<groupId>com.microsoft</groupId>
+	<artifactId>backend-netty</artifactId>
 	<version>0.1</version>
 
 	<packaging>jar</packaging>
