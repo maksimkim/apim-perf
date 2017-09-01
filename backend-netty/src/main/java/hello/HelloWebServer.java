@@ -55,7 +55,7 @@ public class HelloWebServer {
 		}
 	}
 
-	private void doRun(EventLoopGroup loupGroup, Class<? extends ServerChannel> serverChannelClass, IoMultiplexer multiplexer) throws InterruptedException {
+	private void doRun(EventLoopGroup loupGroup, Class<? extends ServerChannel> serverChannelClass, IoMultiplexer multiplexer) throws InterruptedException, SSLException {
 		try {
 			InetSocketAddress inet = new InetSocketAddress(port);
 
