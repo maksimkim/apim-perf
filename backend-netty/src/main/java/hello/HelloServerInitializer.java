@@ -1,5 +1,4 @@
 package hello;
-package io.netty.handler.ssl;
 
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -23,7 +22,7 @@ public class HelloServerInitializer extends ChannelInitializer<SocketChannel> {
 	@Override
 	public void initChannel(SocketChannel ch) throws Exception {
 		ChannelPipeline p = ch.pipeline();
-        p.addLast(this.sslCtx.newHandler(p.alloc()));
+        p.addLast(this.sslCtx.newHandler(ch.alloc()));
 		p.addLast("encoder", new HttpResponseEncoder());
 		p.addLast("decoder", new HttpRequestDecoder(4096, 8192, 8192, false));
 		p.addLast("handler", new HelloServerHandler(service));
