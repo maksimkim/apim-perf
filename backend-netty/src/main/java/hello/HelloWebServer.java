@@ -66,7 +66,7 @@ public class HelloWebServer {
 			}
             
             File certificate = new File("server.pem");
-            File privateKey = new File("key.pem");
+            File privateKey = new File("server.key");
             SslContext sslContext = SslContextBuilder.forServer(certificate, privateKey).sslProvider(SslProvider.OPENSSL).build();
                         
 			b.option(ChannelOption.SO_BACKLOG, 8192);
