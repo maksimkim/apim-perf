@@ -1,4 +1,5 @@
 package hello;
+package io.netty.handler.ssl;
 
 import java.net.InetSocketAddress;
 
@@ -17,6 +18,15 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.ResourceLeakDetector.Level;
+
+import java.security.AlgorithmConstraints;
+import java.security.AlgorithmParameters;
+import java.security.CryptoPrimitive;
+import java.security.Key;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLEngineResult;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLParameters;
 
 public class HelloWebServer {
 
@@ -51,7 +61,11 @@ public class HelloWebServer {
 			if (multiplexer == IoMultiplexer.EPOLL) {
 				b.option(EpollChannelOption.SO_REUSEPORT, true);
 			}
-			
+            
+            File certificate = new File("server.pem");
+            File privateKey = new File("key.pem");
+            SslContext sslContext = SslContextBuilder.forServer(certificate, privateKey).sslProvider(SslProvider.OPENSSL).build();
+                        
 			b.option(ChannelOption.SO_BACKLOG, 8192);
 			b.option(ChannelOption.SO_REUSEADDR, true);
 			b.group(loupGroup).channel(serverChannelClass).childHandler(new HelloServerInitializer(loupGroup.next()));
