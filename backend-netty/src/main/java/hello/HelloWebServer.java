@@ -55,7 +55,7 @@ public class HelloWebServer {
 		}
 	}
 
-	private void doRun(EventLoopGroup loupGroup, Class<? extends ServerChannel> serverChannelClass, IoMultiplexer multiplexer) throws InterruptedException, SSLException {
+	private void doRun(EventLoopGroup loopGroup, Class<? extends ServerChannel> serverChannelClass, IoMultiplexer multiplexer) throws InterruptedException, SSLException {
 		try {
 			InetSocketAddress inet = new InetSocketAddress(port);
 
@@ -71,7 +71,7 @@ public class HelloWebServer {
                         
 			b.option(ChannelOption.SO_BACKLOG, 8192);
 			b.option(ChannelOption.SO_REUSEADDR, true);
-			b.group(loupGroup).channel(serverChannelClass).childHandler(new HelloServerInitializer(loupGroup.next(), sslContext));
+			b.group(loopGroup).channel(serverChannelClass).childHandler(new HelloServerInitializer(loopGroup.next(), sslContext));
 			b.childOption(ChannelOption.SO_REUSEADDR, true);
 
 			Channel ch = b.bind(inet).sync().channel();
@@ -80,7 +80,7 @@ public class HelloWebServer {
 
 			ch.closeFuture().sync();
 		} finally {
-			loupGroup.shutdownGracefully().sync();
+			loopGroup.shutdownGracefully().sync();
 		}
 	}
 
@@ -89,7 +89,7 @@ public class HelloWebServer {
 		if (args.length > 0) {
 			port = Integer.parseInt(args[0]);
 		} else {
-			port = 8080;
+			port = 443;
 		}
 		new HelloWebServer(port).run();
 	}
