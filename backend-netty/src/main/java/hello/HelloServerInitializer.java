@@ -26,7 +26,7 @@ public class HelloServerInitializer extends ChannelInitializer<SocketChannel> {
         p.addLast(this.sslCtx.newHandler(ch.alloc()));
 		p.addLast("encoder", new HttpResponseEncoder());
 		p.addLast("decoder", new HttpRequestDecoder(4096, 8192, 8192, false));
-        //p.addLast("aggregator", new HttpObjectAggregator(1048576));
+        p.addLast("aggregator", new HttpObjectAggregator(1048576));
 		p.addLast("handler", new HelloServerHandler(service));
 	}
 }
