@@ -124,7 +124,7 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 	}
     
     private void writeEchoResponse(ChannelHandlerContext ctx, ByteBuf buf) {
-		ctx.write(makeResponse(buf, TYPE_JSON, buf.readableBytes()), ctx.voidPromise());
+		ctx.write(makeResponse(buf, TYPE_JSON, buf.readableBytes().toString()), ctx.voidPromise());
 	}
 
 	private FullHttpResponse makeResponse(ByteBuf buf, CharSequence contentType, CharSequence contentLength) {
