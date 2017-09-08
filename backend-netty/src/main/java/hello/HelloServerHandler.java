@@ -107,6 +107,9 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 				byte[] json = MAPPER.writeValueAsBytes(newMsg());
 				writeJsonResponse(ctx, Unpooled.wrappedBuffer(json));
 				return;
+            case "/echo":
+                writeEchoResponse(ctx, request);
+                return;
 		}
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
 		ctx.write(response).addListener(ChannelFutureListener.CLOSE);
@@ -118,6 +121,10 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 
 	private void writeJsonResponse(ChannelHandlerContext ctx, ByteBuf buf) {
 		ctx.write(makeResponse(buf, TYPE_JSON, JSON_CLHEADER_VALUE), ctx.voidPromise());
+	}
+    
+    private void writeEchoResponse(ChannelHandlerContext ctx, object msg) {
+		ctx.write(msg);
 	}
 
 	private FullHttpResponse makeResponse(ByteBuf buf, CharSequence contentType, CharSequence contentLength) {
