@@ -123,7 +123,7 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 		ctx.write(makeResponse(buf, TYPE_JSON, JSON_CLHEADER_VALUE), ctx.voidPromise());
 	}
     
-    private void writeEchoResponse(ChannelHandlerContext ctx, object msg) {
+    private void writeEchoResponse(ChannelHandlerContext ctx, Object msg) {
 		ctx.write(msg);
 	}
 
