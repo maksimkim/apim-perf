@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufHolder;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -108,7 +109,7 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 				writeJsonResponse(ctx, Unpooled.wrappedBuffer(json));
 				return;
             case "/echo":
-                writeEchoResponse(ctx, request.content());
+                writeEchoResponse(ctx, ((ByteBufHolder)request).content());
                 return;
 		}
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
