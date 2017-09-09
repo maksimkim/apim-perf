@@ -25,7 +25,7 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.FastThreadLocal;
 
-import static io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.QueryStringDecoder;
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
 import static io.netty.handler.codec.http.HttpVersion.*;
 
