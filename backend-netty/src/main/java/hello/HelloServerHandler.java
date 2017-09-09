@@ -25,6 +25,7 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.FastThreadLocal;
 
+import static io.netty.handler.codec.http.*
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
 import static io.netty.handler.codec.http.HttpVersion.*;
 
@@ -99,8 +100,8 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	private void process(ChannelHandlerContext ctx, HttpRequest request) throws Exception {
-		String uri = request.uri();
-		switch (uri) {
+		String path = new QueryStringDecoder(request.uri()).path();
+		switch (path) {
 			case "/plaintext":
 				writePlainResponse(ctx, PLAINTEXT_CONTENT_BUFFER.duplicate());
 				return;
