@@ -110,7 +110,11 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 				writeJsonResponse(ctx, Unpooled.wrappedBuffer(json));
 				return;
             case "/echo":
-                writeEchoResponse(ctx, ((ByteBufHolder)request).content().copy());
+                ByteBuf buf = ((ByteBufHolder)request).content();
+                buf.retain();
+                System.out.printf("Ref cnt: %s%n", Integer.toString(buf.refCnt()));
+                System.out.printf("Length: %s%n", Integer.toString(buf.readableBytes()));
+                writeEchoResponse(ctx, buf);
                 return;
 		}
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
