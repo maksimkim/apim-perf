@@ -6,6 +6,11 @@ import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
@@ -70,8 +75,21 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 	private static final CharSequence CONTENT_LENGTH_ENTITY = HttpHeaderNames.CONTENT_LENGTH;
 	private static final CharSequence SERVER_ENTITY = HttpHeaderNames.SERVER;
 	private static final ObjectMapper MAPPER = newMapper();
+    
+    private static ByteBuf JSONFILE_CONTENT_BUFFER = null;
+    private static CharSequence JSONFILE_CLHEADER_VALUE = null;
 
 	private volatile CharSequence date = new AsciiString(FORMAT.get().format(new Date()));
+    
+    static {
+        try {
+            byte[] data = Files.readAllBytes(new File("/tmp/alaska_req_200kb.json").toPath());
+            JSONFILE_CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(data));
+            JSONFILE_CLHEADER_VALUE = new AsciiString(String.valueOf(data.length));
+        } catch (java.io.IOException e) {
+            System.out.printf("Reading json file failed: %s%n", e.toString());
+        }
+    }
 
 	HelloServerHandler(ScheduledExecutorService service) {
 		service.scheduleWithFixedDelay(new Runnable() {
@@ -112,9 +130,9 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
             case "/echo":
                 ByteBuf buf = ((ByteBufHolder)request).content();
                 buf.retain();
-                System.out.printf("Ref cnt: %s%n", Integer.toString(buf.refCnt()));
-                System.out.printf("Length: %s%n", Integer.toString(buf.readableBytes()));
                 writeEchoResponse(ctx, buf);
+            case "/jsonfile":
+                writeResponse(ctx, JSONFILE_CONTENT_BUFFER, TYPE_JSON, JSONFILE_CLHEADER_VALUE);
                 return;
 		}
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
@@ -130,8 +148,12 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 	}
     
     private void writeEchoResponse(ChannelHandlerContext ctx, ByteBuf buf) {
-		ctx.write(makeResponse(buf, TYPE_JSON, Integer.toString(buf.readableBytes())));
+		ctx.write(makeResponse(buf, TYPE_JSON, String.valueOf(buf.readableBytes())));
 	}
+    
+    private void writeResponse(ChannelHandlerContext ctx, ByteBuf buf, CharSequence contentType, CharSequence contentLength) {
+        ctx.write(makeResponse(buf, contentType, contentLength), ctx.voidPromise());
+    }
 
 	private FullHttpResponse makeResponse(ByteBuf buf, CharSequence contentType, CharSequence contentLength) {
 		final FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, buf, false);
