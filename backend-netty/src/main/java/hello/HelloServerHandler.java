@@ -132,8 +132,8 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
                 buf.retain();
                 writeEchoResponse(ctx, buf);
             case "/jsonfile":
-                byte[] json = MAPPER.writeValueAsBytes(newMsg());
-				writeJsonResponse(ctx, Unpooled.wrappedBuffer(json));
+                byte[] json1 = MAPPER.writeValueAsBytes(newMsg());
+				writeJsonResponse(ctx, Unpooled.wrappedBuffer(json1));
                 //writeResponse(ctx, JSONFILE_CONTENT_BUFFER, TYPE_JSON, JSONFILE_CLHEADER_VALUE);
                 return;
 		}
