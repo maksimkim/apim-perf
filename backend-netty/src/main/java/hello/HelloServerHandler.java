@@ -138,7 +138,7 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
                     public void run() {
                         writeResponse(ctx, JSONFILE_CONTENT_BUFFER.duplicate(), TYPE_JSON, JSONFILE_CLHEADER_VALUE);
                     }
-                }, 1, TimeUnit.MINUTES);
+                }, 1, TimeUnit.SECONDS);
                 
                 return;
 		}
