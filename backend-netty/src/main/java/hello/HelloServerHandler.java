@@ -83,7 +83,7 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
     
     static {
         try {
-            byte[] data = Files.readAllBytes(new File("/tmp/alaska_req_200kb.json").toPath());
+            byte[] data = Files.readAllBytes(new File("../alaska_req_200kb.json").toPath());
             JSONFILE_CONTENT_BUFFER = Unpooled.unreleasableBuffer(Unpooled.directBuffer().writeBytes(data));
             JSONFILE_CLHEADER_VALUE = new AsciiString(String.valueOf(data.length));
         } catch (java.io.IOException e) {
@@ -133,7 +133,13 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
                 writeEchoResponse(ctx, buf);
                 return;
             case "/jsonfile":
-                writeResponse(ctx, JSONFILE_CONTENT_BUFFER.duplicate(), TYPE_JSON, JSONFILE_CLHEADER_VALUE);
+                ctx.executor().schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        writeResponse(ctx, JSONFILE_CONTENT_BUFFER.duplicate(), TYPE_JSON, JSONFILE_CLHEADER_VALUE);
+                    }
+                }, 1, TimeUnit.MINUTES);
+                
                 return;
 		}
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
