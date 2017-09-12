@@ -133,8 +133,7 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
                 writeEchoResponse(ctx, buf);
                 return;
             case "/jsonfile":
-                byte[] json1 = MAPPER.writeValueAsBytes(newMsg());
-                writeResponse(ctx, Unpooled.wrappedBuffer(json1), TYPE_JSON, JSON_CLHEADER_VALUE);
+                writeResponse(ctx, JSONFILE_CONTENT_BUFFER.duplicate(), TYPE_JSON, JSONFILE_CLHEADER_VALUE);
                 return;
 		}
 		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, NOT_FOUND, Unpooled.EMPTY_BUFFER, false);
